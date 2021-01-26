@@ -2,6 +2,19 @@
 	box-sizing: border-box;
 }
 
+html, body { 
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+#container {
+	flex: 1 0 auto; 
+	padding-bottom: 20px;	
+}
+
 #search {
 	padding: 10px 0px 10px 20px;
 	background-color: #DBDBDB;	
@@ -14,7 +27,7 @@
 #wrapper {
 	display: flex;	
 	flex-direction: row;
-	margin-top: 30px;
+	margin-top: 30px;	
 }
 
 .table {
@@ -40,13 +53,24 @@
 	height: 300px;	
 	border: 1px solid #000;
 	padding: 10px 10px 10px 10px;
-	margin: 20px 20px 30px 20px;
+	margin: 20px 20px 20px 20px;
 }
 
 #page-footer {	
-	background-color: green;
-	text-align: center;
 	background-color: #212529;
-	color: #fff;
-	padding: 20px 20px 20px 20px;
+	text-align: center;
+	color: #fff;	
+	flex-shrink: 0; 
+	padding: 20px;
+}
+
+/* -------------- About page ---------------------*/
+
+.about-content{
+	margin: 30px 30px 30px 30px;
+}
+
+h3 {
+	margin: 30px 30px 30px 30px;
+	padding-top: 50px;
 }

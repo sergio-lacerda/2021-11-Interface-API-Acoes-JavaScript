@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">		
-    <title>API Cliente - Cotação de Ações</title>	
+    <title>Sobre ::: API Cliente - Cotação de Ações</title>	
 	<link href="./css/styles.css" rel="stylesheet">
 	<link href="./bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
-	
+
 	<div id="container">	
 		<!-- Menu superior -->
 		
@@ -32,53 +32,21 @@
 		  </div>
 		</nav>	
 		
-		
-		<!-- Formulário de pesquisa de ativo -->
-		
-		<div id="search">
-			<form class="d-flex" action="#" method="POST">
-			  <input class="form-control me-2 input-width" type="search" placeholder="PETR4.SA" aria-label="Search">
-			  <button class="btn btn-success" type="submit">Pesquisar</button>
-			</form>		
-		</div>	
-		
-		<!-- Exibição dos dados -->
-		
-		<div id="wrapper">
-			<div id="table" class="table-div">
-				<table class="table">
-				  <thead>
-					<tr class="table-primary">			  
-					  <th scope="col">Data</th>
-					  <th scope="col">Abertura</th>
-					  <th scope="col">Fechamento</th>
-					</tr>
-				  </thead>
-				  <tbody>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-				  </tbody>
-				</table>	
-			</div>
+		<!-- Conteúdo da página -->
+		<div>
+			<h3>Sobre ::: API Cliente - Cotação de Ações</h3>
 			
-			<div id="chart-column" class="column-chart"></div>
-		</div>
-		
-		<div class="col-md-12">
-		<div id="chart-line" class="line-chart"></div>
+			<p class="about-content">
+				Esse é um projeto de estudo para consumo de dados de cotação de ações na bolsa 
+				de valores através de uma API (Alpha Vantage), tratamento e exibição das 
+				respectivas informações em uma página contendo tabela e gráficos. Desenvolvido 
+				em HTML5, CSS3, JavaScript e Google Charts.
+			</p>
+			<p class="about-content">
+				Desenvolvido por Sérgio Lacerda &nbsp; .:. &nbsp;
+				<a href="https://www.linkedin.com/in/sergiolacerda" target="_blank">LinkedIn</a>  &nbsp;|&nbsp;  
+				<a href="https://github.com/sergio-lacerda" target="_blank">GitHub</a>
+			</p>
 		</div>		
 	</div>
 	
@@ -91,9 +59,7 @@
 	  </p>
 	</footer>
 	
-	<!-- Inclusão dos scripts -->
-	<script type="text/javascript" src="./js/alphavantage.js"></script>	
-	<script type="text/javascript" src="./js/charts.js"></script>
+	<!-- Inclusão dos scripts -->	
 	<script type="text/javascript" src="./bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
