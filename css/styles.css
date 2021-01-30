@@ -24,6 +24,7 @@ body {
 	background-color: red;
 	color: yellow;
 	padding: 10px 0px 10px 20px;
+	display: none;
 }
 
 .input-width {

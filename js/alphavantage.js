@@ -1,12 +1,37 @@
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	Validação do formulário de pesquisa de ações
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
+
+// Ticker da ação cujos dados quer consultar
+var symbol = 'PETR4.SA';
+
+function validar(){		
+	var aux = document.getElementById('txtSymbol').value;
+	symbol = aux;
+	
+	if (aux === undefined || aux ==null || aux.length<5) {
+		document.getElementById('error').style.display = 'block';
+		document.getElementById('error').innerHTML = 'Código de ação inválido!';
+		document.getElementById('txtSymbol').focus();		
+	}
+	else {
+		document.getElementById('error').style.display = 'none';
+		lineChartData = [ ['',0,0] ];
+		symbol = aux;
+		urlDaily = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;
+		console.log(urlDaily);
+		// Solicitando os dados para a API
+		requestData(urlDaily);				
+	}	
+}
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	Programação do uso da API AlphaVantage
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 
 // Sua chave para acesso à API
 var apiKey = 'IG38WIHOGQ07E0CL';
-	
-// Ticker da ação cujos dados quer consultar
-var symbol = 'PETR4.SA';	
 
 // URL para solicitar dados de cotação diária de uma ação
 var urlDaily = 
@@ -33,8 +58,10 @@ async function requestData( url ) {
 } 
 
 // Função para informar possíveis erros
-function showError(msg) {
+function showError(msg) {	
+	document.getElementById('error').style.display = 'block';
 	document.getElementById('error').innerHTML = 'Erro: ' + msg;
+	document.getElementById('txtSymbol').focus();		
 }
 
 //	Função para exibição dos dados 
@@ -45,6 +72,8 @@ function showData(data) {
 	let maxima = 0;
 	let minima = 99999999;
 	let media = 0;
+	
+	document.getElementById('series-table').tBodies[0].innerHTML = '';
 		
 	for ( const field in aux ) {	
 		let auxDate = new Date(field);
@@ -82,15 +111,14 @@ function showData(data) {
 	
 	media = media / rowsCount;
 	
+	if (minima == 99999999) { minima = 0; }
+	
 	// Informando valores para o gráfico de colunas
 	barChartData = [ ['', maxima, media, minima] ];		
 	google.charts.load('current', {packages: ['corechart', 'bar']});		
 	google.charts.setOnLoadCallback(drawMultSeries);
 	
-	// Informando valores para o gráfico de linhas	
-	//lineChartData = [ ['2020-11-03', 23, 15], ['2020-11-04', 10, 5], ['2020-11-05', 0, 0] ];
-	//lineChartData = Array.from( auxValues );
-	console.log(lineChartData);
+	// Informando valores para o gráfico de linhas		
 	google.charts.load('current', {packages: ['corechart', 'line']});		
 	google.charts.setOnLoadCallback(drawCurveTypes);	
 }
@@ -100,9 +128,6 @@ function addTableContent(date, open, close){
 	var myTable = document.getElementById('series-table').tBodies[0];	
 	myTable.innerHTML = myTable.innerHTML + `<tr><td>${date}</td><td>${open}</td><td>${close}</td></tr>`;
 }
-
-
-requestData(urlDaily);
 
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -160,12 +185,3 @@ function drawCurveTypes() {
     chart.draw(data, options);
 }
 	
-
-
-
-
-
-
-
-
-
