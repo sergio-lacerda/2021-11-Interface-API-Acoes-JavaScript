@@ -31,7 +31,7 @@ function validar(){
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 
 // Sua chave para acesso à API
-var apiKey = 'IG38WIHOGQ07E0CL';
+var apiKey = 'SUA_CHAVE_API';
 
 // URL para solicitar dados de cotação diária de uma ação
 var urlDaily = 
