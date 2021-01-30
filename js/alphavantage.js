@@ -18,8 +18,7 @@ function validar(){
 		document.getElementById('error').style.display = 'none';
 		lineChartData = [ ['',0,0] ];
 		symbol = aux;
-		urlDaily = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;
-		console.log(urlDaily);
+		urlDaily = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;		
 		// Solicitando os dados para a API
 		requestData(urlDaily);				
 	}	
@@ -166,7 +165,7 @@ function drawCurveTypes() {
     data.addColumn('number', 'Abertura');
     data.addColumn('number', 'Fechamento');
 
-    data.addRows(lineChartData);
+    data.addRows(lineChartData.reverse());
 
     var options = {
 		title: 'Série diária de preço do ativo',  
