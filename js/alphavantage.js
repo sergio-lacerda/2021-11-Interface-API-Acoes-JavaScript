@@ -1,30 +1,23 @@
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Parâmetros para as requisições à API
+	Programação do uso da API AlphaVantage
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 
 // Sua chave para acesso à API
 var apiKey = 'IG38WIHOGQ07E0CL';
 	
 // Ticker da ação cujos dados quer consultar
-var symbol = 'ITSA4.SA';	
-
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	URLs para as requisições à API AlphaVantage
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
+var symbol = 'PETR4.SA';	
 
 // URL para solicitar dados de cotação diária de uma ação
 var urlDaily = 
 	`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&interval=5min&apikey=${apiKey}`;
 
-
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Funções para obtenção e tratamento dos dados da API
-	Valores para o parâmetro "series":
-		+ TIME_SERIES_DAILY: Cotação diária de uma ação
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
+// Variáveis globais para receber os dados utilizados pelos gráficos
+var barChartData;
+var lineChartData = [ [,,] ];
 
 // Função para requisitar os ddos da API
-async function requestData( url, series ) { 
+async function requestData( url ) { 
 
 	const options = {
 		method: 'GET',
@@ -34,49 +27,142 @@ async function requestData( url, series ) {
 	
 	await fetch( url, options )
 		.then( response => { response.json() 
-			.then ( data => showData(data, series) )
+			.then ( data => showData(data) )
 		})
-		.catch ( e => erro=e.message )
+		.catch ( e => showError(e.message) )
 } 
 
+// Função para informar possíveis erros
+function showError(msg) {
+	document.getElementById('error').innerHTML = 'Erro: ' + msg;
+}
+
+//	Função para exibição dos dados 
+function showData(data) {
+	
+	let aux = data['Time Series (Daily)'];
+	let rowsCount = 0;		
+	let maxima = 0;
+	let minima = 99999999;
+	let media = 0;
+		
+	for ( const field in aux ) {	
+		let auxDate = new Date(field);
+		let day = ( (auxDate.getDate()+1) <10) ? ('0'+ (auxDate.getDate()+1) ) : (auxDate.getDate() + 1);
+		let month = ( (auxDate.getMonth()+1) <10) ? ('0'+ (auxDate.getMonth()+1) ) : (auxDate.getMonth()+1);
+		let year = auxDate.getFullYear();		
+		let formatDate =  day + '/' + month + '/' + year;	
+		
+		let openValue = parseFloat(aux[field]['1. open']).toFixed(2);
+		let closeValue = parseFloat(aux[field]['4. close']).toFixed(2);		
+		
+		// Adicionando os últimos 4 registros na tabela da página index
+		if ( rowsCount < 5 ) {
+			addTableContent(formatDate, openValue, closeValue);			
+		}			
+		
+		if (maxima < parseFloat(aux[field]['4. close'])) {
+			maxima = parseFloat(aux[field]['4. close']);
+		}
+		
+		if (minima > parseFloat(aux[field]['4. close'])) {
+			minima = parseFloat(aux[field]['4. close']);			
+		}
+		
+		media += parseFloat(aux[field]['4. close']);		
+		
+		lineChartData[rowsCount] = [formatDate, 
+			parseFloat(aux[field]['1. open']), 
+			parseFloat(aux[field]['4. close'])
+		];
+		
+		//lineChartData.push(auxValues );
+		rowsCount++;
+	} // for	
+	
+	media = media / rowsCount;
+	
+	// Informando valores para o gráfico de colunas
+	barChartData = [ ['', maxima, media, minima] ];		
+	google.charts.load('current', {packages: ['corechart', 'bar']});		
+	google.charts.setOnLoadCallback(drawMultSeries);
+	
+	// Informando valores para o gráfico de linhas	
+	//lineChartData = [ ['2020-11-03', 23, 15], ['2020-11-04', 10, 5], ['2020-11-05', 0, 0] ];
+	//lineChartData = Array.from( auxValues );
+	console.log(lineChartData);
+	google.charts.load('current', {packages: ['corechart', 'line']});		
+	google.charts.setOnLoadCallback(drawCurveTypes);	
+}
+
+//	Função para adicionar dados à tabela da página index.html
+function addTableContent(date, open, close){
+	var myTable = document.getElementById('series-table').tBodies[0];	
+	myTable.innerHTML = myTable.innerHTML + `<tr><td>${date}</td><td>${open}</td><td>${close}</td></tr>`;
+}
+
+
+requestData(urlDaily);
 
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	Funções para exibição dos dados da API
+	Gráficos Google Charts para os valores recebidos via API
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 
-// Função para identificar o tipo de exibição e redirecionar
-function showData(data, series) {
-	switch (series) {
-		case 'TIME_SERIES_DAILY':
-			showDaily(data, series);
-			break;
-	}
+// Gráfico de colunas para valores de referência
+function drawMultSeries() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Preço');
+	data.addColumn('number', 'Máxima');
+    data.addColumn('number', 'Média');
+    data.addColumn('number', 'Mínima');
+
+    data.addRows(barChartData);
+
+    var options = {
+        title: 'Referências de preço do ativo',
+        hAxis: {
+          title: 'Referência',
+        },
+        vAxis: {
+          title: 'Valores'
+        }
+    };
+
+    var chart = new google.visualization.ColumnChart( document.getElementById('chart-column') );
+    chart.draw(data, options);
 }
 
 
-//	Funções para exibição dos dados de cotação diária
-function showDaily(data, series) {
-	
-	let aux = data['Time Series (Daily)'];
-	
-	for ( const field in aux ) {		
-		console.log(
-			' Data: ' + field + 
-			' Abertura: ' + aux[field]['1. open'] + 
-			' Fechamento: ' + aux[field]['4. close']
-		);
-	}	
+// Gráfico de linha para série diária de valores
+function drawCurveTypes() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Data');
+    data.addColumn('number', 'Abertura');
+    data.addColumn('number', 'Fechamento');
+
+    data.addRows(lineChartData);
+
+    var options = {
+		title: 'Série diária de preço do ativo',  
+        hAxis: {
+          title: 'Data'
+        },
+        vAxis: {
+          title: 'Valores'
+        },
+        series: {
+          1: {curveType: 'function'}
+        }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart-line'));
+    chart.draw(data, options);
 }
+	
 
 
 
-requestData(urlDaily, 'TIME_SERIES_DAILY');
-
-
-//showData(dados);
-
-//document.getElementById('content').innerHTML = dados;
 
 
 

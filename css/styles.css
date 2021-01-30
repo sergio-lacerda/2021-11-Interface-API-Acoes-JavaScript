@@ -20,6 +20,12 @@ body {
 	background-color: #DBDBDB;	
 }
 
+#error {
+	background-color: red;
+	color: yellow;
+	padding: 10px 0px 10px 20px;
+}
+
 .input-width {
 	width: 180px !important;
 }

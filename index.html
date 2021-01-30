@@ -40,13 +40,18 @@
 			  <input class="form-control me-2 input-width" type="search" placeholder="PETR4.SA" aria-label="Search">
 			  <button class="btn btn-success" type="submit">Pesquisar</button>
 			</form>		
-		</div>	
+		</div>
+		
+		<!-- Informações sobre erros -->
+		<div id="error">
+			Deu erro!
+		</div>
 		
 		<!-- Exibição dos dados -->
 		
 		<div id="wrapper">
 			<div id="table" class="table-div">
-				<table class="table">
+				<table id="series-table" class="table">
 				  <thead>
 					<tr class="table-primary">			  
 					  <th scope="col">Data</th>
@@ -54,23 +59,7 @@
 					  <th scope="col">Fechamento</th>
 					</tr>
 				  </thead>
-				  <tbody>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-					<tr>			  
-					  <td>12/06/2020</td>
-					  <td>16.45</td>
-					  <td>18,02</td>
-					</tr>
-				  </tbody>
+				  <tbody></tbody>
 				</table>	
 			</div>
 			
@@ -93,7 +82,7 @@
 	
 	<!-- Inclusão dos scripts -->
 	<script type="text/javascript" src="./js/alphavantage.js"></script>	
-	<script type="text/javascript" src="./js/charts.js"></script>
+	<!--<script type="text/javascript" src="./js/charts.js"></script>-->
 	<script type="text/javascript" src="./bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
